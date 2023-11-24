@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtCore
 from functools import partial
 from button_actions import ButtonActions
 from w_term_config import BUTTON_CONFIG, COMMAND_CONFIG
@@ -112,6 +112,10 @@ class UserInterface(QtWidgets.QWidget):
         )
         self.serial_dropdown_layout.addWidget(self.connect_serial_button)
 
+        self.serial_reader = SerialReader(self.serial_controller)
+        self.serial_reader.message_received.connect(self.append_to_console)
+        self.serial_reader.start()
+
     def append_to_console(self, text):
         self.terminal.append(text)
 
@@ -131,3 +135,18 @@ class UserInterface(QtWidgets.QWidget):
         self.create_serial_dropdown()
         self.create_command_layout()
         self.create_terminal()
+
+
+class SerialReader(QtCore.QThread):
+    message_received = QtCore.Signal(str)
+
+    def __init__(self, serial_controller):
+        super().__init__()
+        self.serial_controller = serial_controller
+
+    def run(self):
+        while True:
+            if self.serial_controller.serial_instance:
+                message = self.serial_controller.read_from_device()
+                if message:
+                    self.message_received.emit(message)
