@@ -2,6 +2,7 @@ from PySide6 import QtWidgets, QtCore, QtGui
 from functools import partial
 from button_actions import ButtonActions
 from w_term_config import BUTTON_CONFIG, COMMAND_CONFIG
+from plot import PlotEvaluator
 
 
 class UserInterface(QtWidgets.QWidget):
@@ -119,11 +120,14 @@ class UserInterface(QtWidgets.QWidget):
         )
         self.serial_dropdown_layout.addWidget(self.connect_serial_button)
 
-        self.serial_reader = SerialReader(self.serial_controller)
+        self.serial_reader = SerialReader(self.serial_controller, self.plot_evaluator.evaluate_plot)
         self.serial_reader.message_received.connect(self.append_to_console)
         self.serial_reader.start()
 
     def append_to_console(self, text):
+        if isinstance(text, bytes):
+            text = text.decode("utf-8")
+
         self.terminal.append(text)
 
     def clear_console(self):
@@ -136,6 +140,7 @@ class UserInterface(QtWidgets.QWidget):
         super().__init__()
 
         self.serial_controller = serial_controller
+        self.plot_evaluator = PlotEvaluator()
 
         self.create_root_layout()
         self.create_buttons()
@@ -147,13 +152,31 @@ class UserInterface(QtWidgets.QWidget):
 class SerialReader(QtCore.QThread):
     message_received = QtCore.Signal(str)
 
-    def __init__(self, serial_controller):
+    def __init__(self, serial_controller, callback):
         super().__init__()
         self.serial_controller = serial_controller
+        self.partial_message = b""
+        self.callback = callback
 
     def run(self):
         while True:
             if self.serial_controller.serial_instance:
                 message = self.serial_controller.read_from_device()
                 if message:
-                    self.message_received.emit(message)
+                    self.process_message(message)
+
+    def process_message(self, message):
+        message_bytes = message.encode() if isinstance(message, str) else message
+
+        self.partial_message += message_bytes
+        start_index = self.partial_message.find(b'\x02')
+        end_index = self.partial_message.find(b'\x03')
+
+        while start_index != -1 and end_index != -1:
+            data = self.partial_message[start_index + 1:end_index]
+            self.callback(data)
+
+            self.partial_message = self.partial_message[end_index + 1:]
+
+            start_index = self.partial_message.find(b'\x02')
+            end_index = self.partial_message.find(b'\x03')

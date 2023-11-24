@@ -12,7 +12,7 @@ class SerialController:
 
     def connect_to_device(self, addr):
         try:
-            self.serial_instance = serial.Serial(addr, baudrate=500000, timeout=1)
+            self.serial_instance = serial.Serial(addr, baudrate=115200, timeout=1)
             return True
         except serial.SerialException as e:
             print(f"Failed to connect to device: {e}")
@@ -26,7 +26,8 @@ class SerialController:
 
     def write_to_device(self, data):
         if self.serial_instance:
-            self.serial_instance.write(data.encode())
+            encoded_data = (data + "\r\n").encode()
+            self.serial_instance.write(encoded_data)
             return True
         else:
             return False
