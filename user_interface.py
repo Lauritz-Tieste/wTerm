@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore, QtGui
 from functools import partial
 from button_actions import ButtonActions
 from w_term_config import BUTTON_CONFIG, COMMAND_CONFIG
@@ -95,6 +95,13 @@ class UserInterface(QtWidgets.QWidget):
 
         self.terminal = QtWidgets.QTextEdit()
         self.terminal.setReadOnly(True)
+
+        # set courier font
+        font = QtGui.QFont()
+        font.setFamily("Courier New")
+        font.setPointSize(10)
+        self.terminal.setFont(font)
+
         self.terminal.setStyleSheet(
             "QTextEdit {background-color: #d1d5db; padding: 6px; border-radius: 4px; };"
         )
