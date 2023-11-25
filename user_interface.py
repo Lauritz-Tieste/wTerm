@@ -62,7 +62,7 @@ class UserInterface(QtWidgets.QWidget):
         self.command_entries = []
 
         row, col = 0, 0
-        for label, color, function_name in COMMAND_CONFIG:
+        for label, color, function_name, command in COMMAND_CONFIG:
             command_button = QtWidgets.QPushButton(label)
             command_button.setStyleSheet(
                 f"QPushButton {{ background-color: #fff; color: #000; padding: 6px; border-radius: 4px; }}"
@@ -70,6 +70,7 @@ class UserInterface(QtWidgets.QWidget):
             )
             entry = QtWidgets.QLineEdit()
             entry.setPlaceholderText("Enter a command")
+            entry.setText(command)
             entry.setStyleSheet(
                 "QLineEdit {background-color: #fff; color: #000; padding: 6px; border-radius: 4px; };"
             )

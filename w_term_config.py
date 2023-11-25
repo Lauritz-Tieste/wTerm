@@ -8,4 +8,14 @@ BUTTON_CONFIG = [
     ("Help", "#64748b", "help_clicked"),
 ]
 
-COMMAND_CONFIG = [("Send", "#0f172a", "send_command_clicked")] * 6
+COMMAND_CONFIG = [("List", "#0f172a", "send_command_clicked", "list"),
+                  ("PWM", "#0f172a", "send_command_clicked",
+                   '"SpgParkClarke;rec reset;rec title SpgParkClarke;rec 0 10 0.25 0.1;ch fUd 1;ch fUq 1;ch fSinPhi '
+                   '2;ch fCosPhi 2;ch fUa 3;ch fUb 3;ch fU1 4;ch fU2 4;ch fU3 4;ch fM1 5;ch fM2 5;ch fM3 5;ch fMean '
+                   '5;ch fPwm1 6;ch fPwm2 6;ch fPwm3 6;ch iCcr1 7;ch iCcr2 7;ch iCcr3 7;limits 1 0 0 [V];limits 2 0 0 '
+                   '[+-1];limits 3 0 0 [V];limits 4 0 0 [V];limits 5 0 0 [+-0.5];limits 6 0 0 [0..1];limits 7 0 0 ['
+                   '0..PWMMAX];s;'),
+                  ("Send", "#0f172a", "send_command_clicked", ""),
+                  ("Send", "#0f172a", "send_command_clicked", ""),
+                  ("Send", "#0f172a", "send_command_clicked", ""),
+                  ("Send", "#0f172a", "send_command_clicked", "")]
