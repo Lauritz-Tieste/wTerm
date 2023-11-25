@@ -1,5 +1,4 @@
 import windialog as wd
-
 import plot
 
 
@@ -43,7 +42,7 @@ class ButtonActions:
                 plot_evaluator.evaluate_plot(data=f.read())
 
     def save_terminal_clicked(self):
-        console_content = self.ui.return_terminal_text()
+        console_content = self.ui.get_terminal_text()
 
         filetypes = (
             (

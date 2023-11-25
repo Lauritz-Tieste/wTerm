@@ -1,16 +1,12 @@
-import time
-
-from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6 import QtWidgets, QtGui
 from functools import partial
 from button_actions import ButtonActions
 from w_term_config import BUTTON_CONFIG, COMMAND_CONFIG
 from plot import PlotEvaluator
+from serial_reader import SerialReader
 
 
 class UserInterface(QtWidgets.QWidget):
-    def create_root_layout(self):
-        self.root_layout = QtWidgets.QVBoxLayout(self)
-
     def create_serial_dropdown(self):
         self.serial_dropdown = QtWidgets.QComboBox(self)
         self.serial_dropdown.currentIndexChanged.connect(self.serial_device_changed)
@@ -48,7 +44,6 @@ class UserInterface(QtWidgets.QWidget):
 
     def serial_device_changed(self, index):
         selected_device = self.serial_dropdown.itemText(index)
-        print(f"Selected Serial Device: {selected_device}")
 
     def connect_serial_device(self):
         selected_device = self.serial_dropdown.currentText()
@@ -56,7 +51,7 @@ class UserInterface(QtWidgets.QWidget):
             self.append_to_console(f"Connected to Serial Device on {selected_device}")
         else:
             self.append_to_console(
-                "Failed to connect. Maybe you are already connected or the device is not connected to computer."
+                "Failed to connect. Maybe the device is already connected or the device is not connected to computer."
             )
 
     def create_command_layout(self):
@@ -99,7 +94,6 @@ class UserInterface(QtWidgets.QWidget):
         self.terminal = QtWidgets.QTextEdit()
         self.terminal.setReadOnly(True)
 
-        # set courier font
         font = QtGui.QFont()
         font.setFamily("Courier New")
         font.setPointSize(10)
@@ -130,12 +124,12 @@ class UserInterface(QtWidgets.QWidget):
         if isinstance(text, bytes):
             text = text.decode("utf-8")
 
-        self.terminal.append(text+ "\n")
+        self.terminal.append(text + "\n")
 
     def clear_console(self):
         self.terminal.clear()
 
-    def return_terminal_text(self):
+    def get_terminal_text(self):
         return self.terminal.toPlainText()
 
     def __init__(self, serial_controller):
@@ -144,42 +138,9 @@ class UserInterface(QtWidgets.QWidget):
         self.serial_controller = serial_controller
         self.plot_evaluator = PlotEvaluator(self)
 
-        self.create_root_layout()
+        self.root_layout = QtWidgets.QVBoxLayout(self)
+
         self.create_buttons()
         self.create_serial_dropdown()
         self.create_command_layout()
         self.create_terminal()
-
-
-class SerialReader(QtCore.QThread):
-    message_received = QtCore.Signal(str)
-
-    def __init__(self, serial_controller, callback):
-        super().__init__()
-        self.serial_controller = serial_controller
-        self.partial_message = b""
-        self.callback = callback
-
-    def run(self):
-        while True:
-            if self.serial_controller.serial_instance:
-                message = self.serial_controller.read_from_device()
-                if message:
-                    self.process_message(message)
-            time.sleep(0.001)
-
-    def process_message(self, message):
-        message_bytes = message.encode() if isinstance(message, str) else message
-
-        self.partial_message += message_bytes
-        start_index = self.partial_message.find(b'\x02')
-        end_index = self.partial_message.find(b'\x03')
-
-        while start_index != -1 and end_index != -1:
-            data = self.partial_message[start_index + 1:end_index]
-            self.callback(data)
-
-            self.partial_message = self.partial_message[end_index + 1:]
-
-            start_index = self.partial_message.find(b'\x02')
-            end_index = self.partial_message.find(b'\x03')

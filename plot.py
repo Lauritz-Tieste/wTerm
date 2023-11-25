@@ -1,11 +1,7 @@
 import json
-
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.style as mplstyle
-
-matplotlib.use('Qt5Agg')
-matplotlib.use('agg')
 
 
 class PlotEvaluator:
@@ -13,32 +9,23 @@ class PlotEvaluator:
         self.ui = ui
 
     def evaluate_plot(self, data):
-        self.ui.append_to_console("Received Plot Data. Evaluating ...")
         print(data)
 
         plot_data = json.loads(data)
         if "Text" in plot_data["type"]:
-            self.plot_text(plot_data)
+            pass  # TODO: Implement Text Plot
         elif "Result" in plot_data["type"]:
-            self.plot_result(plot_data)
+            pass  # TODO: Implement Result Plot
         elif "XT-Plot" in plot_data["type"]:
             self.plot_xt_graph(self, plot_data)
         elif "Bode-Plot" in plot_data["type"]:
-            self.plot_bode(plot_data)
+            pass  # TODO: Implement Bode Plot
         else:
-            print("No Plot")
-
-    @staticmethod
-    def plot_text(plot_data):
-        print("Plot Text")  # TODO: Implement
-
-    @staticmethod
-    def plot_result(plot_data):
-        print("Plot Result")  # TODO: Implement
+            self.ui.append_to_console("Error: No Plot found in data")
 
     @staticmethod
     def plot_xt_graph(self, plot_data):
-        self.ui.append_to_console("XT-Plot received. Opening Plot window ...")
+        self.ui.append_to_console("Opened XT-Plot in another window")
         try:
             m_names = plot_data["ySignals"]
         except Exception:
@@ -80,12 +67,11 @@ class PlotEvaluator:
 
         values = [list(i) for i in zip(*plot_data["xyData"])]
 
-        if (len(values[0])) > 1:  # draw xt-plot with more than 1 sample
+        if (len(values[0])) > 1:
             matplotlib.use('QtAgg')
             plt.figure(1)
             plt.clf()
             mplstyle.use('fast')
-            # TODO: Implement
             plt.subplots_adjust(top=0.95, bottom=0.05, left=0.07, right=0.95, hspace=0.1)
 
             if m_scale[0] == 0.0:
@@ -117,7 +103,7 @@ class PlotEvaluator:
             if m_title[0] != "":
                 plt.title(m_title[0])
             plt.show(block=False)
-        else:  # else metering output
+        else:
             pass
             # try:
             #     if self.metering.state() == "normal": self.metering.focus()
@@ -135,7 +121,3 @@ class PlotEvaluator:
             # if (self.StartIsRunning == True):
             #     time.sleep(0.02)
             #     # self.sendData('s\n\r')
-
-    @staticmethod
-    def plot_bode(plot_data):
-        print("Plot Bode")  # TODO: Implement
