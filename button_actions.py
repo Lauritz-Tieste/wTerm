@@ -39,7 +39,7 @@ class ButtonActions:
 
         if file_path:
             with open(file_path, "r") as f:
-                plot_evaluator = plot.PlotEvaluator()
+                plot_evaluator = plot.PlotEvaluator(self.ui)
                 plot_evaluator.evaluate_plot(data=f.read())
 
     def save_terminal_clicked(self):

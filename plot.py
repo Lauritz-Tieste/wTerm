@@ -9,7 +9,11 @@ matplotlib.use('agg')
 
 
 class PlotEvaluator:
+    def __init__(self, ui):
+        self.ui = ui
+
     def evaluate_plot(self, data):
+        self.ui.append_to_console("Received Plot Data. Evaluating ...")
         print(data)
 
         plot_data = json.loads(data)
@@ -18,7 +22,7 @@ class PlotEvaluator:
         elif "Result" in plot_data["type"]:
             self.plot_result(plot_data)
         elif "XT-Plot" in plot_data["type"]:
-            self.plot_xt_graph(plot_data)
+            self.plot_xt_graph(self, plot_data)
         elif "Bode-Plot" in plot_data["type"]:
             self.plot_bode(plot_data)
         else:
@@ -33,7 +37,8 @@ class PlotEvaluator:
         print("Plot Result")  # TODO: Implement
 
     @staticmethod
-    def plot_xt_graph(plot_data):
+    def plot_xt_graph(self, plot_data):
+        self.ui.append_to_console("XT-Plot received. Opening Plot window ...")
         try:
             m_names = plot_data["ySignals"]
         except Exception:

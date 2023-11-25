@@ -1,3 +1,5 @@
+import time
+
 from PySide6 import QtWidgets, QtCore, QtGui
 from functools import partial
 from button_actions import ButtonActions
@@ -128,7 +130,7 @@ class UserInterface(QtWidgets.QWidget):
         if isinstance(text, bytes):
             text = text.decode("utf-8")
 
-        self.terminal.append(text)
+        self.terminal.append(text+ "\n")
 
     def clear_console(self):
         self.terminal.clear()
@@ -140,7 +142,7 @@ class UserInterface(QtWidgets.QWidget):
         super().__init__()
 
         self.serial_controller = serial_controller
-        self.plot_evaluator = PlotEvaluator()
+        self.plot_evaluator = PlotEvaluator(self)
 
         self.create_root_layout()
         self.create_buttons()
@@ -164,6 +166,7 @@ class SerialReader(QtCore.QThread):
                 message = self.serial_controller.read_from_device()
                 if message:
                     self.process_message(message)
+            time.sleep(0.001)
 
     def process_message(self, message):
         message_bytes = message.encode() if isinstance(message, str) else message
