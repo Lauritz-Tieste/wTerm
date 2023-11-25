@@ -26,44 +26,29 @@ class PlotEvaluator:
     @staticmethod
     def plot_xt_graph(self, plot_data):
         self.ui.append_to_console("Opened XT-Plot in another window")
-        try:
-            m_names = plot_data["ySignals"]
-        except Exception:
-            m_names = [""] * (len(plot_data["xyData"][1]) - 1)
-        try:
-            m_window = plot_data["pDiagram"]
-            if max(m_window) == 0:
-                m_window = list(range(1, len(plot_data["xyData"][1])))
-        except Exception:
-            m_window = list(range(1, len(plot_data["xyData"][1])))
-        try:
-            m_scale = plot_data["xyScale"]
-        except Exception:
-            m_scale = [0] * len(plot_data["xyData"][1])
-        try:
-            m_offset = plot_data["xyOffset"]
-        except Exception:
-            m_offset = [0] * len(plot_data["xyData"][1])
-        try:
-            m_min = plot_data["pLimits"][0]
-        except Exception:
-            m_min = [0] * (len(plot_data["xyData"][1]) - 1)
-        try:
-            m_max = plot_data["pLimits"][1]
-        except Exception:
-            m_max = [0] * (len(plot_data["xyData"][1]) - 1)
-        try:
-            m_ylabel = plot_data["yLabel"]
-        except Exception:
-            m_ylabel = [""] * (len(plot_data["xyData"][1]) - 1)
-        try:
-            m_xlabel = plot_data["xLabel"]
-        except Exception:
-            m_xlabel = [""]
-        try:
-            m_title = plot_data["pTitle"]
-        except Exception:
-            m_title = [""]
+
+        default_length = len(plot_data["xyData"][1]) - 1
+
+        def validate_field(key, default):
+            try:
+                value = plot_data[key]
+                if isinstance(value, list):
+                    return value
+                else:
+                    return [value] * default_length
+            except Exception:
+                return [default] * default_length
+
+        m_names = validate_field("ySignals", "")
+        m_window = validate_field("pDiagram", list(range(1, len(plot_data["xyData"][1]))) if max(
+            validate_field("pDiagram", 0)) == 0 else validate_field("pDiagram", 0))
+        m_scale = validate_field("xyScale", 0)
+        m_offset = validate_field("xyOffset", 0)
+        m_min = validate_field("pLimits", 0)[0]
+        m_max = validate_field("pLimits", 0)[1]
+        m_ylabel = validate_field("yLabel", "")
+        m_xlabel = validate_field("xLabel", "")
+        m_title = validate_field("pTitle", "")
 
         values = [list(i) for i in zip(*plot_data["xyData"])]
 
@@ -103,8 +88,7 @@ class PlotEvaluator:
             if m_title[0] != "":
                 plt.title(m_title[0])
             plt.show(block=False)
-        else:
-            pass
+
             # try:
             #     if self.metering.state() == "normal": self.metering.focus()
             # except Exception:
