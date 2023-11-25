@@ -1,5 +1,7 @@
 import windialog as wd
 
+import plot
+
 
 class ButtonActions:
     def __init__(self, ui, serial_controller):
@@ -13,7 +15,32 @@ class ButtonActions:
         self.ui.append_to_console("Save Plot button clicked (not ready yet)")
 
     def load_plot_clicked(self):
-        self.ui.append_to_console("Load Plot button clicked (not ready yet)")
+        filetypes = (
+            (
+                "JSON Files",
+                "*.json",
+            ),
+        )
+
+        title = "Load Plot JSON-Data"
+        ok_text = "Load Plot"
+        file_text = "Selected Plot Data"
+
+        file_path = wd.getfile(
+            0,
+            *filetypes,
+            title=title,
+            ok_text=ok_text,
+            file_text=file_text,
+        )
+
+        if isinstance(file_path, list) and file_path:
+            file_path = file_path[0]
+
+        if file_path:
+            with open(file_path, "r") as f:
+                plot_evaluator = plot.PlotEvaluator()
+                plot_evaluator.evaluate_plot(data=f.read())
 
     def save_terminal_clicked(self):
         console_content = self.ui.return_terminal_text()
