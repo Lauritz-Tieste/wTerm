@@ -10,9 +10,9 @@ class SerialController:
     def search_for_devices():
         return serial.tools.list_ports.comports()
 
-    def connect_to_device(self, addr):
+    def connect_to_device(self, addr, baud_rate):
         try:
-            self.serial_instance = serial.Serial(addr, baudrate=115200, timeout=1)
+            self.serial_instance = serial.Serial(addr, baud_rate, timeout=1)
             return True
         except serial.SerialException as e:
             print(f"Failed to connect to device: {e}")

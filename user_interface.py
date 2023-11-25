@@ -4,14 +4,24 @@ from button_actions import ButtonActions
 from w_term_config import BUTTON_CONFIG, COMMAND_CONFIG
 from plot import PlotEvaluator
 from serial_reader import SerialReader
-
+from w_term_config import BAUD_RATES
 
 class UserInterface(QtWidgets.QWidget):
-    def create_serial_dropdown(self):
+    def create_dropdowns(self):
         self.serial_dropdown = QtWidgets.QComboBox(self)
         self.serial_dropdown.currentIndexChanged.connect(self.serial_device_changed)
         self.update_serial_dropdown()
         self.serial_dropdown.setStyleSheet(
+            "QComboBox { background-color: #fff; color: #000; padding: 6px; border-radius: 4px; }"
+            "QComboBox:hover { background-color: #d1d5db; color: #000; padding: 6px; border-radius: 4px; }"
+            "QComboBox::drop-down { width: 20px; height: 20px; border: 0px; }"
+            "QComboBox::down-arrow { image: url(down_arrow.png); }"
+        )
+
+        self.baud_dropdown = QtWidgets.QComboBox(self)
+        self.baud_dropdown.currentIndexChanged.connect(self.baud_rate_changed)
+        self.baud_dropdown.addItems([str(baud_rate) for baud_rate in BAUD_RATES])
+        self.baud_dropdown.setStyleSheet(
             "QComboBox { background-color: #fff; color: #000; padding: 6px; border-radius: 4px; }"
             "QComboBox:hover { background-color: #d1d5db; color: #000; padding: 6px; border-radius: 4px; }"
             "QComboBox::drop-down { width: 20px; height: 20px; border: 0px; }"
@@ -43,11 +53,15 @@ class UserInterface(QtWidgets.QWidget):
             self.buttonLayout.addWidget(button)
 
     def serial_device_changed(self, index):
-        selected_device = self.serial_dropdown.itemText(index)
+        self.serial_dropdown.itemText(index)
+
+    def baud_rate_changed(self, index):
+        self.baud_dropdown.itemText(index)
 
     def connect_serial_device(self):
         selected_device = self.serial_dropdown.currentText()
-        if self.serial_controller.connect_to_device(selected_device):
+        baud_rate = int(self.baud_dropdown.currentText())
+        if self.serial_controller.connect_to_device(selected_device, baud_rate):
             self.append_to_console(f"Connected to Serial Device on {selected_device}")
         else:
             self.append_to_console(
@@ -107,6 +121,7 @@ class UserInterface(QtWidgets.QWidget):
 
         self.serial_dropdown_layout = QtWidgets.QHBoxLayout()
         self.serial_dropdown_layout.addWidget(self.serial_dropdown)
+        self.serial_dropdown_layout.addWidget(self.baud_dropdown)
         self.terminalLayout.addLayout(self.serial_dropdown_layout)
 
         self.connect_serial_button = QtWidgets.QPushButton("Connect")
@@ -143,6 +158,6 @@ class UserInterface(QtWidgets.QWidget):
         self.root_layout = QtWidgets.QVBoxLayout(self)
 
         self.create_buttons()
-        self.create_serial_dropdown()
+        self.create_dropdowns()
         self.create_command_layout()
         self.create_terminal()
