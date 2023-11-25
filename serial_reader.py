@@ -4,12 +4,12 @@ import time
 
 class SerialReader(QtCore.QThread):
     message_received = QtCore.Signal(str)
+    make_plot = QtCore.Signal(str)
 
-    def __init__(self, serial_controller, callback):
+    def __init__(self, serial_controller):
         super().__init__()
         self.serial_controller = serial_controller
         self.partial_message = b""
-        self.callback = callback
 
     def run(self):
         while True:
@@ -28,7 +28,7 @@ class SerialReader(QtCore.QThread):
 
         while start_index != -1 and end_index != -1:
             data = self.partial_message[start_index + 1:end_index]
-            self.callback(data)
+            self.make_plot.emit(data.decode())
 
             self.partial_message = self.partial_message[end_index + 1:]
 

@@ -116,8 +116,9 @@ class UserInterface(QtWidgets.QWidget):
         )
         self.serial_dropdown_layout.addWidget(self.connect_serial_button)
 
-        self.serial_reader = SerialReader(self.serial_controller, self.plot_evaluator.evaluate_plot)
+        self.serial_reader = SerialReader(self.serial_controller)
         self.serial_reader.message_received.connect(self.append_to_console)
+        self.serial_reader.make_plot.connect(self.plot_evaluator.evaluate_plot)
         self.serial_reader.start()
 
     def append_to_console(self, text):
