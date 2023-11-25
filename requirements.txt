@@ -2,3 +2,5 @@ PySide6
 pyserial
 windialog
 pyserial
+matplotlib
+numpy
