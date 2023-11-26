@@ -31,3 +31,17 @@ class SerialController:
             return True
         else:
             return False
+
+    def disconnect_from_device(self):
+        if self.serial_instance:
+            self.serial_instance.close()
+            self.serial_instance = None
+            return True
+        else:
+            return False
+
+    def is_connected(self):
+        if self.serial_instance:
+            return True
+        else:
+            return False

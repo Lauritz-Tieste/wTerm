@@ -4,7 +4,8 @@ from button_actions import ButtonActions
 from w_term_config import BUTTON_CONFIG, COMMAND_CONFIG
 from plot import PlotEvaluator
 from serial_reader import SerialReader
-from w_term_config import BAUD_RATES
+from w_term_config import BAUD_RATES, CONNECT_BUTTON_CONFIG
+
 
 class UserInterface(QtWidgets.QWidget):
     def create_dropdowns(self):
@@ -63,10 +64,24 @@ class UserInterface(QtWidgets.QWidget):
         baud_rate = int(self.baud_dropdown.currentText())
         if self.serial_controller.connect_to_device(selected_device, baud_rate):
             self.append_to_console(f"Connected to Serial Device on {selected_device}")
+            self.connect_serial_button.setText(CONNECT_BUTTON_CONFIG[1][0])
+            self.connect_serial_button.setStyleSheet(
+                f"QPushButton {{ background-color: {CONNECT_BUTTON_CONFIG[1][1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
+                f"QPushButton:hover {{ background-color: #fff; color: {CONNECT_BUTTON_CONFIG[1][1]}; padding: 6px; border-radius: 4px; }}"
+            )
         else:
             self.append_to_console(
                 "Failed to connect. Maybe the device is already connected or the device is not connected to computer."
             )
+
+    def disconnect_serial_device(self):
+        self.serial_controller.disconnect_from_device()
+        self.append_to_console("Disconnected from Serial Device.")
+        self.connect_serial_button.setText(CONNECT_BUTTON_CONFIG[0][0])
+        self.connect_serial_button.setStyleSheet(
+            f"QPushButton {{ background-color: {CONNECT_BUTTON_CONFIG[0][1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
+            f"QPushButton:hover {{ background-color: #fff; color: {CONNECT_BUTTON_CONFIG[0][1]}; padding: 6px; border-radius: 4px; }}"
+        )
 
     def create_command_layout(self):
         self.commandLayout = QtWidgets.QGridLayout(self)
@@ -102,6 +117,12 @@ class UserInterface(QtWidgets.QWidget):
                 col = 0
                 row += 1
 
+    def on_connect_serial_button_clicked(self):
+        if self.serial_controller.is_connected():
+            self.disconnect_serial_device()
+        else:
+            self.connect_serial_device()
+
     def create_terminal(self):
         self.terminalLayout = QtWidgets.QVBoxLayout(self)
         self.root_layout.addLayout(self.terminalLayout)
@@ -124,11 +145,11 @@ class UserInterface(QtWidgets.QWidget):
         self.serial_dropdown_layout.addWidget(self.baud_dropdown)
         self.terminalLayout.addLayout(self.serial_dropdown_layout)
 
-        self.connect_serial_button = QtWidgets.QPushButton("Connect")
-        self.connect_serial_button.clicked.connect(self.connect_serial_device)
+        self.connect_serial_button = QtWidgets.QPushButton(CONNECT_BUTTON_CONFIG[0][0])
+        self.connect_serial_button.clicked.connect(self.on_connect_serial_button_clicked)
         self.connect_serial_button.setStyleSheet(
-            f"QPushButton {{ background-color: #ec4899; color: #fff; padding: 6px; border-radius: 4px; }}"
-            f"QPushButton:hover {{ background-color: #fff; color: #ec4899; padding: 6px; border-radius: 4px; }}"
+            f"QPushButton {{ background-color: {CONNECT_BUTTON_CONFIG[0][1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
+            f"QPushButton:hover {{ background-color: #fff; color: {CONNECT_BUTTON_CONFIG[0][1]}; padding: 6px; border-radius: 4px; }}"
         )
         self.serial_dropdown_layout.addWidget(self.connect_serial_button)
 

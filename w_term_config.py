@@ -8,6 +8,11 @@ BUTTON_CONFIG = [
     ("Help", "#64748b", "help_clicked"),
 ]
 
+CONNECT_BUTTON_CONFIG = [
+    ("Connect", "#22c55e"),
+    ("Disconnect", "#ef4444"),
+]
+
 COMMAND_CONFIG = [("List", "#0f172a", "send_command_clicked", "list"),
                   ("PWM", "#0f172a", "send_command_clicked",
                    '"SpgParkClarke;rec reset;rec title SpgParkClarke;rec 0 10 0.25 0.1;ch fUd 1;ch fUq 1;ch fSinPhi '
