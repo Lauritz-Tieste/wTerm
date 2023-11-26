@@ -4,3 +4,4 @@ windialog
 pyserial
 matplotlib
 numpy
+hashlib
