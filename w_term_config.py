@@ -1,11 +1,9 @@
 BUTTON_CONFIG = [
-    ("Save Setup", "#ef4444", "save_setup_clicked"),
-    ("Start Plot", "#22c55e", "start_plot_clicked"),
-    ("Load Plot", "#22c55e", "load_plot_clicked"),
-    ("Save Plot", "#22c55e", "save_plot_clicked"),
-    ("Save Terminal", "#0ea5e9", "save_terminal_clicked"),
-    ("Clear", "#64748b", "clear_clicked"),
-    ("Help", "#64748b", "help_clicked"),
+    ("Connect", "#f97316", "on_connect_serial_button_clicked", "connect_button"),
+    ("Edit Connection", "#f97316", "on_connection_edit_button_clicked", "connection_edit_button"),
+    ("Load Plot", "#22c55e", "load_plot_clicked", "load_plot_button"),
+    ("Save Terminal", "#0ea5e9", "save_terminal_clicked", "save_terminal_button"),
+    ("Clear", "#64748b", "clear_clicked", "clear_terminal_button"),
 ]
 
 CONNECT_BUTTON_CONFIG = [
@@ -13,7 +11,6 @@ CONNECT_BUTTON_CONFIG = [
     ("Disconnect", "#ef4444"),
 ]
 
-CONNECTION_EDIT_BUTTON = ("Edit Connection", "#22c55e")
 
 CONNECTION_EDIT_WINDOW_SAVE_BUTTON = ("Save Connection", "#22c55e")
 

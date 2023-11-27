@@ -1,5 +1,11 @@
 import windialog as wd
+from PySide6 import QtWidgets
+
 import plot
+from connection_window import ConnectionWindow
+from error_dialogs import show_error_dialog
+from preferences import Preferences
+from w_term_config import BUTTON_CONFIG, CONNECT_BUTTON_CONFIG
 
 
 class ButtonActions:
@@ -7,11 +13,49 @@ class ButtonActions:
         self.ui = ui
         self.serial_controller = serial_controller
 
-    def save_setup_clicked(self):
-        self.ui.append_to_console("Save Setup button clicked (not ready yet)")
+    def disconnect_serial_device(self):
+        self.serial_controller.disconnect_from_device()
+        self.ui.append_to_console("Disconnected from Serial Device.")
+        self.ui.buttons["connect_button"].setText(CONNECT_BUTTON_CONFIG[0][0])
+        self.ui.buttons["connect_button"].setStyleSheet(
+            f"QPushButton {{ background-color: {CONNECT_BUTTON_CONFIG[0][1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
+            f"QPushButton:hover {{ background-color: #fff; color: {CONNECT_BUTTON_CONFIG[0][1]}; padding: 6px; border-radius: 4px; }}"
+        )
 
-    def save_plot_clicked(self):
-        self.ui.append_to_console("Save Plot button clicked (not ready yet)")
+    def connect_serial_device(self):
+        try:
+            session_config = Preferences().get_session_config()
+            serial_device = session_config.get("serial_device")
+            baud_rate = session_config.get("baud_rate")
+
+            if serial_device and baud_rate:
+                if self.serial_controller.connect_to_device(serial_device, baud_rate):
+                    self.ui.append_to_console(f"Connected to Serial Device on {serial_device}")
+                    self.ui.buttons["connect_button"].setText(CONNECT_BUTTON_CONFIG[1][0])
+                    self.ui.buttons["connect_button"].setStyleSheet(
+                        f"QPushButton {{ background-color: {CONNECT_BUTTON_CONFIG[1][1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
+                        f"QPushButton:hover {{ background-color: #fff; color: {CONNECT_BUTTON_CONFIG[1][1]}; padding: 6px; border-radius: 4px; }}"
+                    )
+                else:
+                    self.ui.append_to_console(
+                        "Failed to connect. Maybe the device is already connected or the device is not connected to the computer."
+                    )
+                    pass
+        except Exception as e:
+            show_error_dialog(self, "Error loading the connection configuration",
+                              "The configuration of the connection session was not loaded correctly",
+                              str(e))
+
+    def on_connect_serial_button_clicked(self):
+        if self.serial_controller.is_connected():
+            self.disconnect_serial_device()
+        else:
+            self.connect_serial_device()
+
+    def on_connection_edit_button_clicked(self):
+        popup = ConnectionWindow(serial_controller=self.serial_controller)
+        if popup.exec_() == QtWidgets.QDialog.Accepted:
+            pass
 
     def load_plot_clicked(self):
         filetypes = (
@@ -67,14 +111,8 @@ class ButtonActions:
             with open(file_path, "w") as f:
                 f.write(console_content)
 
-    def start_plot_clicked(self):
-        self.ui.append_to_console("Start Plot button clicked (not ready yet)")
-
     def clear_clicked(self):
         self.ui.clear_console()
-
-    def help_clicked(self):
-        self.ui.append_to_console("Help button clicked (not ready yet)")
 
     def send_command_clicked(self, entry_index):
         if self.serial_controller.serial_instance:
