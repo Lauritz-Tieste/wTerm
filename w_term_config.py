@@ -13,6 +13,8 @@ CONNECT_BUTTON_CONFIG = [
     ("Disconnect", "#ef4444"),
 ]
 
+CONNECTION_EDIT_BUTTON = ("Edit Connection", "#22c55e")
+
 COMMAND_CONFIG = [("List", "#0f172a", "send_command_clicked", "list"),
                   ("PWM", "#0f172a", "send_command_clicked",
                    '"SpgParkClarke;rec reset;rec title SpgParkClarke;rec 0 10 0.25 0.1;ch fUd 1;ch fUq 1;ch fSinPhi '
