@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QDialog, QPushButton, QVBoxLayout, QComboBox
-import json
 
 from w_term_config import BAUD_RATES
 from preferences import Preferences
@@ -8,7 +7,6 @@ from error_dialogs import show_warning_dialog
 
 
 class ConnectionWindow(QDialog):
-    SESSION_CONFIG_FILE = "session_config.json"
 
     def __init__(self, serial_controller):
         super().__init__()
@@ -60,8 +58,7 @@ class ConnectionWindow(QDialog):
         baud_rate = self.baud_dropdown.currentText()
 
         connection_details = {"serial_device": serial_device, "baud_rate": baud_rate}
-        with open(self.SESSION_CONFIG_FILE, "w") as config_file:
-            json.dump(connection_details, config_file)
+        Preferences().save_session_config(connection_details)
 
         self.accept()
 
