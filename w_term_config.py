@@ -11,7 +11,6 @@ CONNECT_BUTTON_CONFIG = [
     ("Disconnect", "#ef4444"),
 ]
 
-
 CONNECTION_EDIT_WINDOW_SAVE_BUTTON = ("Save Connection", "#22c55e")
 
 COMMAND_CONFIG = [("List", "#0f172a", "send_command_clicked", "list"),
@@ -28,3 +27,13 @@ COMMAND_CONFIG = [("List", "#0f172a", "send_command_clicked", "list"),
 
 BAUD_RATES = [50, 75, 110, 134, 150, 200, 300, 600, 1200, 1800, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400,
               460800, 500000, 576000, 921600, 1000000]
+
+BIT_RATE = [{"title": "5", "variable": 5}, {"title": "6", "variable": 6},
+            {"title": "7", "variable": 7}, {"title": "8", "variable": 8}, ]
+
+PARITY = [{"title": "None", "variable": "N"}, {"title": "Even", "variable": "E"},
+          {"title": "Odd", "variable": "O"}, {"title": "Mark", "variable": "M"},
+          {"title": "Space", "variable": "S"}]
+
+STOP_BITS = [{"title": "1", "variable": 1}, {"title": "1.5", "variable": 1.5},
+             {"title": "2", "variable": 2}]

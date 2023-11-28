@@ -24,8 +24,12 @@ class Preferences:
 
             serial_device = connection_details["serial_device"]
             baud_rate = connection_details["baud_rate"]
+            bit_rate = connection_details["bit_rate"]
+            parity = connection_details["parity"]
+            stop_bit = connection_details["stop_bit"]
 
-            return {"serial_device": serial_device, "baud_rate": baud_rate}
+            return {"serial_device": serial_device, "baud_rate": baud_rate, "bit_rate": bit_rate, "parity": parity,
+                    "stop_bit": stop_bit}
 
         except FileNotFoundError:
             return None

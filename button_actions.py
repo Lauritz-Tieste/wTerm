@@ -5,7 +5,7 @@ import plot
 from connection_window import ConnectionWindow
 from error_dialogs import show_error_dialog
 from preferences import Preferences
-from w_term_config import BUTTON_CONFIG, CONNECT_BUTTON_CONFIG
+from w_term_config import CONNECT_BUTTON_CONFIG
 
 
 class ButtonActions:
@@ -27,9 +27,12 @@ class ButtonActions:
             session_config = Preferences().get_session_config()
             serial_device = session_config.get("serial_device")
             baud_rate = session_config.get("baud_rate")
+            bit_rate = session_config.get("bit_rate")
+            parity = session_config.get("parity")
+            stop_bit = session_config.get("stop_bit")
 
             if serial_device and baud_rate:
-                if self.serial_controller.connect_to_device(serial_device, baud_rate):
+                if self.serial_controller.connect_to_device(serial_device, baud_rate, bit_rate, parity, stop_bit):
                     self.ui.append_to_console(f"Connected to Serial Device on {serial_device}")
                     self.ui.buttons["connect_button"].setText(CONNECT_BUTTON_CONFIG[1][0])
                     self.ui.buttons["connect_button"].setStyleSheet(

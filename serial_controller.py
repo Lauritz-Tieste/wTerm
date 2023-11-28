@@ -1,5 +1,6 @@
 import serial
 import serial.tools.list_ports
+from w_term_config import BIT_RATE, PARITY, STOP_BITS
 
 
 class SerialController:
@@ -10,9 +11,29 @@ class SerialController:
     def search_for_devices():
         return serial.tools.list_ports.comports()
 
-    def connect_to_device(self, addr, baud_rate):
+    def connect_to_device(self, addr, baud_rate, bit_rate, parity, stop_bit):
         try:
             self.serial_instance = serial.Serial(addr, baud_rate, timeout=1)
+
+            for bit in BIT_RATE:
+                if bit["title"] == bit_rate:
+                    bit_rate = bit["variable"]
+                    break
+
+            for par in PARITY:
+                if par["title"] == parity:
+                    parity = par["variable"]
+                    break
+
+            for stop in STOP_BITS:
+                if stop["title"] == stop_bit:
+                    stop_bit = stop["variable"]
+                    break
+
+            print(f"bit_rate: {bit_rate}, parity: {parity}, stop_bit: {stop_bit}")
+            self.serial_instance.bytesize = bit_rate
+            self.serial_instance.parity = parity
+            self.serial_instance.stopbits = stop_bit
             return True
         except serial.SerialException as e:
             print(f"Failed to connect to device: {e}")
