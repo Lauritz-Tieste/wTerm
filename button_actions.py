@@ -5,21 +5,26 @@ import plot
 from connection_window import ConnectionWindow
 from error_dialogs import show_error_dialog
 from preferences import Preferences
-from w_term_config import BUTTON_CONFIG, CONNECT_BUTTON_CONFIG
 
 
 class ButtonActions:
     def __init__(self, ui, serial_controller):
         self.ui = ui
         self.serial_controller = serial_controller
+        self.preferences = Preferences()
+        self.connect_button_connected_config = self.preferences.get_button_state_config("connect_button", "connected")
+        self.connect_button_disconnected_config = self.preferences.get_button_state_config("connect_button",
+                                                                                           "disconnected")
+        print("connected: " + str(self.connect_button_connected_config))
+        print("disconnected: " + str(self.connect_button_disconnected_config))
 
     def disconnect_serial_device(self):
         self.serial_controller.disconnect_from_device()
         self.ui.append_to_console("Disconnected from Serial Device.")
-        self.ui.buttons["connect_button"].setText(CONNECT_BUTTON_CONFIG[0][0])
+        self.ui.buttons["connect_button"].setText(self.connect_button_disconnected_config.get("title"))
         self.ui.buttons["connect_button"].setStyleSheet(
-            f"QPushButton {{ background-color: {CONNECT_BUTTON_CONFIG[0][1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
-            f"QPushButton:hover {{ background-color: #fff; color: {CONNECT_BUTTON_CONFIG[0][1]}; padding: 6px; border-radius: 4px; }}"
+            f"QPushButton {{ background-color: {self.connect_button_disconnected_config.get("color")}; color: #fff; padding: 6px; border-radius: 4px; }}"
+            f"QPushButton:hover {{ background-color: #fff; color: {self.connect_button_disconnected_config.get("color")}; padding: 6px; border-radius: 4px; }}"
         )
 
     def connect_serial_device(self):
@@ -31,10 +36,10 @@ class ButtonActions:
             if serial_device and baud_rate:
                 if self.serial_controller.connect_to_device(serial_device, baud_rate):
                     self.ui.append_to_console(f"Connected to Serial Device on {serial_device}")
-                    self.ui.buttons["connect_button"].setText(CONNECT_BUTTON_CONFIG[1][0])
+                    self.ui.buttons["connect_button"].setText(self.connect_button_connected_config.get("title"))
                     self.ui.buttons["connect_button"].setStyleSheet(
-                        f"QPushButton {{ background-color: {CONNECT_BUTTON_CONFIG[1][1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
-                        f"QPushButton:hover {{ background-color: #fff; color: {CONNECT_BUTTON_CONFIG[1][1]}; padding: 6px; border-radius: 4px; }}"
+                        f"QPushButton {{ background-color: {self.connect_button_connected_config.get("color")}; color: #fff; padding: 6px; border-radius: 4px; }}"
+                        f"QPushButton:hover {{ background-color: #fff; color: {self.connect_button_connected_config.get("color")}; padding: 6px; border-radius: 4px; }}"
                     )
                 else:
                     self.ui.append_to_console(
