@@ -1,1 +1,1 @@
-{"serial_device": "COM6", "baud_rate": "115200", "bit_rate": "8", "parity": "None", "stop_bit": "1"}
+{"serial_device": "COM6 - STMicroelectronics STLink Virtual COM Port (COM6)", "baud_rate": "115200", "bit_rate": "8", "parity": "None", "stop_bit": "1"}

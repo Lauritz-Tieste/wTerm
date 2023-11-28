@@ -97,7 +97,7 @@ class ConnectionWindow(QDialog):
         layout.addSpacing(20)
 
         button = QPushButton(CONNECTION_EDIT_WINDOW_SAVE_BUTTON[0])
-        button.clicked.connect(self.save_button_clocked)
+        button.clicked.connect(self.save_button_clicked)
         button.setStyleSheet(
             f"QPushButton {{ background-color: {CONNECTION_EDIT_WINDOW_SAVE_BUTTON[1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
             f"QPushButton:hover {{ background-color: #fff; color: {CONNECTION_EDIT_WINDOW_SAVE_BUTTON[1]}; padding: 6px; border-radius: 4px; }}"
@@ -114,9 +114,9 @@ class ConnectionWindow(QDialog):
         devices = self.serial_controller.search_for_devices()
         self.serial_dropdown.clear()
         for device in devices:
-            self.serial_dropdown.addItem(device.device)
+            self.serial_dropdown.addItem(str(device))
 
-    def save_button_clocked(self):
+    def save_button_clicked(self):
         serial_device = self.serial_dropdown.currentText()
         baud_rate = self.baud_dropdown.currentText()
 

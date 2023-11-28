@@ -33,7 +33,7 @@ class ButtonActions:
 
             if serial_device and baud_rate:
                 if self.serial_controller.connect_to_device(serial_device, baud_rate, bit_rate, parity, stop_bit):
-                    self.ui.append_to_console(f"Connected to Serial Device on {serial_device}")
+                    self.ui.append_to_console(f"Connected to Serial Device ({serial_device})")
                     self.ui.buttons["connect_button"].setText(CONNECT_BUTTON_CONFIG[1][0])
                     self.ui.buttons["connect_button"].setStyleSheet(
                         f"QPushButton {{ background-color: {CONNECT_BUTTON_CONFIG[1][1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
