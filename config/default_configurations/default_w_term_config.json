@@ -1,0 +1,125 @@
+{
+  "button_box_buttons": [
+    {
+      "title": "Connect",
+      "color": "#22c55e",
+      "on_click": "on_connect_serial_button_clicked",
+      "name": "connect_button",
+      "states": [
+        {
+          "state_name": "connected",
+          "title": "Disconnect",
+          "color": "#ef4444",
+          "on_click": "on_disconnect_serial_button_clicked"
+        },
+        {
+          "state_name": "disconnected",
+          "title": "Connect",
+          "color": "#22c55e",
+          "on_click": "on_connect_serial_button_clicked"
+        }
+      ]
+    },
+    {
+      "title": "Edit Connection",
+      "color": "#f97316",
+      "on_click": "on_connection_edit_button_clicked",
+      "name": "connection_edit_button"
+    },
+    {
+      "title": "Load Plot",
+      "color": "#22c55e",
+      "on_click": "load_plot_clicked",
+      "name": "load_plot_button"
+    },
+    {
+      "title": "Save Terminal",
+      "color": "#0ea5e9",
+      "on_click": "save_terminal_clicked",
+      "name": "save_terminal_button"
+    },
+    {
+      "title": "Clear",
+      "color": "#64748b",
+      "on_click": "clear_clicked",
+      "name": "clear_terminal_button"
+    }
+  ],
+  "connection_edit_buttons": [
+    {
+      "title": "Save Connection",
+      "color": "#22c55e",
+      "on_click": "save_connection_clicked",
+      "name": "save_connection_button"
+    }
+  ],
+  "command_fields": [
+    {
+      "title": "List",
+      "color": "#0f172a",
+      "on_click": "send_command_clicked",
+      "name": "list_button",
+      "command": "list"
+    },
+    {
+      "title": "PWM",
+      "color": "#0f172a",
+      "on_click": "send_command_clicked",
+      "name": "pwm_button",
+      "command": "\"SpgParkClarke;rec reset;rec title SpgParkClarke;rec 0 10 0.25 0.1;ch fUd 1;ch fUq 1;ch fSinPhi 2;ch fCosPhi 2;ch fUa 3;ch fUb 3;ch fU1 4;ch fU2 4;ch fU3 4;ch fM1 5;ch fM2 5;ch fM3 5;ch fMean 5;ch fPwm1 6;ch fPwm2 6;ch fPwm3 6;ch iCcr1 7;ch iCcr2 7;ch iCcr3 7;limits 1 0 0 [V];limits 2 0 0 [+-1];limits 3 0 0 [V];limits 4 0 0 [V];limits 5 0 0 [+-0.5];limits 6 0 0 [0..1];limits 7 0 0 [0..PWMMAX];s;"
+    },
+    {
+      "title": "Send",
+      "color": "#0f172a",
+      "on_click": "send_command_clicked",
+      "name": "send_button",
+      "command": ""
+    },
+    {
+      "title": "Send",
+      "color": "#0f172a",
+      "on_click": "send_command_clicked",
+      "name": "send_button",
+      "command": ""
+    },
+    {
+      "title": "Send",
+      "color": "#0f172a",
+      "on_click": "send_command_clicked",
+      "name": "send_button",
+      "command": ""
+    },
+    {
+      "title": "Send",
+      "color": "#0f172a",
+      "on_click": "send_command_clicked",
+      "name": "send_button",
+      "command": ""
+    }
+  ],
+  "baud_rates": [
+    50,
+    75,
+    110,
+    134,
+    150,
+    200,
+    300,
+    600,
+    1200,
+    1800,
+    2400,
+    4800,
+    9600,
+    19200,
+    38400,
+    57600,
+    115200,
+    230400,
+    460800,
+    500000,
+    576000,
+    921600,
+    1000000
+  ]
+}

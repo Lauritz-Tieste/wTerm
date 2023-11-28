@@ -1,8 +1,6 @@
 from PySide6.QtWidgets import QDialog, QPushButton, QVBoxLayout, QComboBox
 
-from w_term_config import BAUD_RATES
 from preferences import Preferences
-from w_term_config import CONNECTION_EDIT_WINDOW_SAVE_BUTTON
 from error_dialogs import show_warning_dialog
 
 
@@ -11,6 +9,9 @@ class ConnectionWindow(QDialog):
     def __init__(self, serial_controller):
         super().__init__()
         self.serial_controller = serial_controller
+        self.preferences = Preferences()
+        self.baud_rates = self.preferences.get_w_term_config().get("baud_rates")
+        self.connect_button_connected_config = self.preferences.get_w_term_config().get("connection_edit_buttons")[0]
 
         layout = QVBoxLayout()
 
@@ -24,7 +25,7 @@ class ConnectionWindow(QDialog):
         )
 
         self.baud_dropdown = QComboBox(self)
-        self.baud_dropdown.addItems([str(baud_rate) for baud_rate in BAUD_RATES])
+        self.baud_dropdown.addItems([str(baud_rate) for baud_rate in self.baud_rates])
         self.baud_dropdown.setStyleSheet(
             "QComboBox { background-color: #fff; color: #000; padding: 6px; border-radius: 4px; }"
             "QComboBox:hover { background-color: #d1d5db; color: #000; padding: 6px; border-radius: 4px; }"
@@ -32,11 +33,11 @@ class ConnectionWindow(QDialog):
         )
         layout.addWidget(self.baud_dropdown)
 
-        button = QPushButton(CONNECTION_EDIT_WINDOW_SAVE_BUTTON[0])
+        button = QPushButton(self.connect_button_connected_config.get("title"))
         button.clicked.connect(self.save_button_clocked)
         button.setStyleSheet(
-            f"QPushButton {{ background-color: {CONNECTION_EDIT_WINDOW_SAVE_BUTTON[1]}; color: #fff; padding: 6px; border-radius: 4px; }}"
-            f"QPushButton:hover {{ background-color: #fff; color: {CONNECTION_EDIT_WINDOW_SAVE_BUTTON[1]}; padding: 6px; border-radius: 4px; }}"
+            f"QPushButton {{ background-color: {self.connect_button_connected_config.get("color")}; color: #fff; padding: 6px; border-radius: 4px; }}"
+            f"QPushButton:hover {{ background-color: #fff; color: {self.connect_button_connected_config.get("color")}; padding: 6px; border-radius: 4px; }}"
         )
         layout.addWidget(button)
 

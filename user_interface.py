@@ -2,9 +2,9 @@ from PySide6 import QtWidgets, QtGui
 from functools import partial
 
 from button_actions import ButtonActions
-from w_term_config import BUTTON_CONFIG, COMMAND_CONFIG
 from plot import PlotEvaluator
 from serial_reader import SerialReader
+from preferences import Preferences
 
 
 class UserInterface(QtWidgets.QWidget):
@@ -13,17 +13,18 @@ class UserInterface(QtWidgets.QWidget):
         self.root_layout.addLayout(self.buttonLayout)
 
         self.button_actions = ButtonActions(self, self.serial_controller)
+        self.preferences = Preferences()
 
-        for label, color, function_name, button_name in BUTTON_CONFIG:
-            button = QtWidgets.QPushButton(label)
+        for button_config in self.preferences.get_w_term_config().get("button_box_buttons"):
+            button = QtWidgets.QPushButton(button_config.get("title"))
             button.setStyleSheet(
-                f"QPushButton {{ background-color: {color}; color: #fff; padding: 6px; border-radius: 4px; }}"
-                f"QPushButton:hover {{ background-color: #fff; color: {color}; padding: 6px; border-radius: 4px; }}"
+                f"QPushButton {{ background-color: {button_config.get("color")}; color: #fff; padding: 6px; border-radius: 4px; }}"
+                f"QPushButton:hover {{ background-color: #fff; color: {button_config.get("color")}; padding: 6px; border-radius: 4px; }}"
             )
-            button.clicked.connect(partial(self.button_actions.button_clicked, function_name))
+            button.clicked.connect(partial(self.button_actions.button_clicked, button_config.get("on_click")))
 
             self.buttonLayout.addWidget(button)
-            self.buttons[button_name] = button
+            self.buttons[button_config.get("name")] = button
 
     def create_command_layout(self):
         self.commandLayout = QtWidgets.QGridLayout(self)
@@ -33,15 +34,15 @@ class UserInterface(QtWidgets.QWidget):
         self.command_entries = []
 
         row, col = 0, 0
-        for label, color, function_name, command in COMMAND_CONFIG:
-            command_button = QtWidgets.QPushButton(label)
+        for command_item in self.preferences.get_w_term_config().get("command_fields"):
+            command_button = QtWidgets.QPushButton(command_item.get("title"))
             command_button.setStyleSheet(
                 f"QPushButton {{ background-color: #fff; color: #000; padding: 6px; border-radius: 4px; }}"
-                f"QPushButton:hover {{ background-color: {color}; color: #fff; padding: 6px; border-radius: 4px; }}"
+                f"QPushButton:hover {{ background-color: {command_item.get("color")}; color: #fff; padding: 6px; border-radius: 4px; }}"
             )
             entry = QtWidgets.QLineEdit()
             entry.setPlaceholderText("Enter a command")
-            entry.setText(command)
+            entry.setText(command_item.get("command"))
             entry.setStyleSheet(
                 "QLineEdit {background-color: #fff; color: #000; padding: 6px; border-radius: 4px; };"
             )
