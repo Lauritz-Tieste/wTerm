@@ -59,6 +59,20 @@ class UserInterface(QtWidgets.QWidget):
                 col = 0
                 row += 1
 
+    def create_instant_command_layout(self):
+        self.instantCommandLayout = QtWidgets.QHBoxLayout(self)
+        self.root_layout.addLayout(self.instantCommandLayout)
+
+        entry = QtWidgets.QLineEdit()
+        entry.setPlaceholderText("Enter a command. Press enter to send.")
+        entry.setStyleSheet(
+            "QLineEdit {background-color: #fff; color: #000; padding: 6px; border-radius: 4px; };"
+        )
+        entry.returnPressed.connect(
+            partial(self.command_actions.send_instant_command_clicked, entry)
+        )
+        self.instantCommandLayout.addWidget(entry)
+
     def create_terminal(self):
         self.terminalLayout = QtWidgets.QVBoxLayout(self)
         self.root_layout.addLayout(self.terminalLayout)
@@ -105,4 +119,5 @@ class UserInterface(QtWidgets.QWidget):
 
         self.create_buttons()
         self.create_command_layout()
+        self.create_instant_command_layout()
         self.create_terminal()

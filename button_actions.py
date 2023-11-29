@@ -118,15 +118,21 @@ class ButtonActions:
         self.ui.clear_console()
 
     def send_command_clicked(self, entry_index):
-        if self.serial_controller.serial_instance:
-            command_text = self.ui.command_entries[entry_index].text()
+        command_text = self.ui.command_entries[entry_index].text()
+        self.send_command(command_text)
 
+    def button_clicked(self, function_name):
+        getattr(self, function_name)()
+
+    def send_instant_command_clicked(self, entry):
+        command_text = entry.text()
+        self.send_command(command_text)
+
+    def send_command(self, command_text):
+        if self.serial_controller.serial_instance:
             if self.serial_controller.write_to_device(command_text):
                 self.ui.append_to_console(f"Send command '{command_text}'")
             else:
                 self.ui.append_to_console("Error sending command to the device.")
         else:
             self.ui.append_to_console("Error: Not connected to a serial device.")
-
-    def button_clicked(self, function_name):
-        getattr(self, function_name)()
