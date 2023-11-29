@@ -47,7 +47,7 @@ class UserInterface(QtWidgets.QWidget):
             )
 
             command_button.clicked.connect(
-                partial(self.command_actions.send_command_clicked, col // 2)
+                partial(self.command_actions.send_command_clicked, len(self.command_entries))
             )
             self.commandLayout.addWidget(command_button, row, col)
             self.commandLayout.addWidget(entry, row, col + 1)
