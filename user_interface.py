@@ -119,5 +119,5 @@ class UserInterface(QtWidgets.QWidget):
 
         self.create_buttons()
         self.create_command_layout()
-        self.create_instant_command_layout()
         self.create_terminal()
+        self.create_instant_command_layout()
