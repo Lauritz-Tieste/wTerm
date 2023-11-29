@@ -55,7 +55,7 @@ class PlotEvaluator:
 
         if (len(values[0])) > 1:
             matplotlib.use('QtAgg')
-            plt.figure("vTerm | XT-Plot (" + str(hashlib.md5(str(plot_data).encode()).hexdigest()) + ")")
+            plt.figure("wTerm | XT-Plot (" + str(hashlib.md5(str(plot_data).encode()).hexdigest()) + ")")
             plt.clf()
             mplstyle.use('fast')
             plt.subplots_adjust(top=0.95, bottom=0.05, left=0.07, right=0.95, hspace=0.1)
@@ -139,7 +139,7 @@ class PlotEvaluator:
             frequency = np.array(values[0])
             fgIndex = np.arange(0, int((len(values) - 1) / 2))
             ref = np.zeros([len(fgIndex), len(values[0])], dtype=complex)
-            plt.figure("vTerm | Bode-Plot (" + str(hashlib.md5(str(plot_data).encode()).hexdigest()) + ")")
+            plt.figure("wTerm | Bode-Plot (" + str(hashlib.md5(str(plot_data).encode()).hexdigest()) + ")")
             plt.clf()
             with contextlib.suppress(Exception):
                 for index in fgIndex:

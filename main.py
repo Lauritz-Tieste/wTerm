@@ -10,7 +10,7 @@ if __name__ == "__main__":
     serial_controller = SerialController()
 
     widget = UserInterface(serial_controller)
-    widget.setWindowTitle("vTerm")
+    widget.setWindowTitle("wTerm")
     widget.resize(1000, 700)
     widget.show()
 
